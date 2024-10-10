@@ -9,9 +9,9 @@ module T3_tb();
 		#10 rst = 0;
 		#20 en = 1;
 		#20 en = 0;
-		#30	en = 1;
-		#40	rst = 1;
-		#50	rst = 0;
+		#30 en = 1;
+		#40 rst = 1;
+		#50 rst = 0;
 		#200 en = 0;
 	end
 	always begin
