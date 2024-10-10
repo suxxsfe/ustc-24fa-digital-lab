@@ -1,10 +1,10 @@
 module T3 #(
     parameter   MAX_VALUE = 8'd100,
-	parameter	MIN_VALUE = 8'd0,
+    parameter	MIN_VALUE = 8'd0,
 )(
     input                   clk,
     input                   rst,
-	input 					enable,
+    input                   enable,
     output                  out
 );
 
