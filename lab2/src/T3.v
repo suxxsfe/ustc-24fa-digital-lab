@@ -12,14 +12,14 @@ reg [7:0] counter;
 always @(posedge clk) begin
     if(rst || !enable) begin
         counter <= 0;
-	end
+    end
     else begin
         if(counter >= MAX_VALUE || counter < MIN_VALUE) begin
             counter <= MIN_VALUE;
-		end
+        end
         else begin
             counter <= counter + 8'b1;
-		end
+        end
     end
 end
 
