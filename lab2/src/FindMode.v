@@ -7,10 +7,6 @@ module FindMode(
 ); 
 	reg [7:0] cnt;
 	
-	initial begin
-		cnt = 0;
-	end
-	
 	always @(posedge clk) begin
 		if(rst) begin
 			out <= 0;
