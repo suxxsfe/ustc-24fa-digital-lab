@@ -6,7 +6,7 @@ module Counter #(
     output                  out
 );
 
-reg [7:0] counter;
+reg [25:0] counter;
 always @(posedge clk) begin
     if (rst)
         counter <= 0;
@@ -14,7 +14,7 @@ always @(posedge clk) begin
         if (counter >= MAX_VALUE)
             counter <= 0;
         else
-            counter <= counter + 8'b1;
+            counter <= counter + 26'b1;
     end
 end
 
