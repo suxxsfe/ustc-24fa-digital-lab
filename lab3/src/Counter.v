@@ -1,5 +1,5 @@
 module Counter #(
-    parameter   MAX_VALUE = 8'd100
+    parameter   MAX_VALUE = 26'd100
 )(
     input                   clk,
     input                   rst,
