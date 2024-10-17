@@ -7,7 +7,7 @@ module T3_top(
 T3 segment(
     .clk(clk),
     .rst(btn),
-    .output_data(32'h24000176),
+    .output_data(32'h23000176),
     .seg_data(seg_data),
     .seg_an(seg_an)
 );
