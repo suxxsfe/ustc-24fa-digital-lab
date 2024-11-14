@@ -20,20 +20,26 @@ module MUL #(
     reg [1:0] current_state, next_state;
 
     reg we, set, shift;
-    reg [2*WIDTH-1 : 0] next_product;
+    wire [2*WIDTH-1 : 0] next_product;
     Register #(.WIDTH(2*WIDTH)) reg_product(
-        .clk(clk), .rst(rst), .we(we),
+        .clk(clk), .rst(rst || current_state == IDLE), .we(we),
         .din(next_product), .dout(product)
     );
     ShiftReg #(.MODE(0), .WIDTH(2*WIDTH)) reg_multiplicand(
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst || current_state == IDLE),
         .set(set), .en(shift),
         .din({32'b0, a}), .dout(multiplicand)
     );
     ShiftReg #(.MODE(1), .WIDTH(WIDTH)) reg_multiplier(
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst || current_state == IDLE),
         .set(set), .en(shift),
         .din(b), .dout(multiplier)
+    );
+    
+    Adder8 adder(
+        .a(product), .b(multiplicand),
+        .ci(0),
+        .s(next_product)
     );
 
     always @(posedge clk) begin
@@ -55,7 +61,7 @@ module MUL #(
         else if(current_state == INIT) begin
             set = 1;
             shift = 0;
-            next_product = 0;
+//            next_product = 0;
             we = 1;
             next_state = CALC;
         end
@@ -68,7 +74,7 @@ module MUL #(
         end
         else begin // CALC
             if(multiplier[0]) begin
-                next_product = product + multiplicand;
+//                next_product = product + multiplicand;
                 we = 1;
             end
             else begin
