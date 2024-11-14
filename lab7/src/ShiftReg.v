@@ -17,6 +17,10 @@ module ShiftReg #(
             num <= 0;
             dout <= 0;
         end
+        else if(set && en) begin
+            dout <= MODE ? din >> 1 : din << 1;
+            num <= MODE ? din >> 1 : din << 1;
+        end
         else if(set) begin
             num <= din;
             dout <= din;
