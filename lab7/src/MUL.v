@@ -28,7 +28,7 @@ module MUL #(
     ShiftReg #(.MODE(0), .WIDTH(2*WIDTH)) reg_multiplicand(
         .clk(clk), .rst(rst || current_state == IDLE),
         .set(set), .en(shift),
-        .din({32'b0, a}), .dout(multiplicand)
+        .din({{WIDTH{1'b0}}, a}), .dout(multiplicand)
     );
     ShiftReg #(.MODE(1), .WIDTH(WIDTH)) reg_multiplier(
         .clk(clk), .rst(rst || current_state == IDLE),
