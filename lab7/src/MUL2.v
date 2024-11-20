@@ -9,8 +9,8 @@ module MUL2 #(
     output      reg         [2*WIDTH-1:0]       res,
     output      reg         [ 0 : 0]            finish
 );
-    wire [WIDTH-1 : 0]     multiplicand;       // 被乘数寄存器
-    wire [2*WIDTH : 0]     product;            // 乘积寄存器
+    reg [WIDTH-1 : 0]     multiplicand;       // 被乘数寄存器
+    reg [2*WIDTH : 0]     product;            // 乘积寄存器
 
     localparam IDLE = 2'b00;            // 空闲状态。这个周期寄存器保持原值不变。当 start 为 1 时跳转到 INIT。
     localparam INIT = 2'b01;            // 初始化。下个周期跳转到 CALC
@@ -18,26 +18,34 @@ module MUL2 #(
     localparam DONE = 2'b11;            // 计算完成。下个周期跳转到 IDLE
     reg [1:0] current_state, next_state;
 
-    reg we, set, shift;
-	integer shift_times;
-    wire [WIDTH-1 : 0] next_product;
-    Register #(.WIDTH(WIDTH)) reg_multiplicand(
-        .clk(clk), .rst(rst || current_state == IDLE), .we(we),
-        .din(a), .dout(multiplicand)
-    );
-    ShiftReg #(.MODE(1), .WIDTH(2*WIDTH+1)) reg_product(
-        .clk(clk), .rst(rst || current_state == IDLE),
-        .set(set), .en(shift),
-        .din(current_state == INIT ? {0, b} : {next_product, }),
-		.dout(product)
+    integer shift_times;
+    wire [WIDTH : 0] next_product;
+    
+    Adder8 #(.WIDTH(WIDTH)) adder(
+        .a(product[2*WIDTH-1 : WIDTH]), .b(multiplicand),
+        .ci(0),
+        .s(next_product[WIDTH-1 : 0]),
+        .co(next_product[WIDTH])
     );
     
-    Adder8 adder(
-        .a(product), .b(multiplicand),
-        .ci(0),
-        .s(next_product[2*WIDTH-1 : 0]),
-		.co(next_product[2*WIDTH])
-    );
+    always @(posedge clk) begin
+        if(rst || current_state == IDLE) begin
+            product <= 0;
+            multiplicand <= 0;
+        end
+        if(current_state == INIT) begin
+            product <= {{(WIDTH+1){1'b0}}, b};
+            multiplicand <= a;
+        end
+        else if(current_state == CALC) begin
+            if(product[0]) begin
+                product <= {1'b0, next_product, product[WIDTH-1 : 1]};
+            end
+            else begin
+                product <= {1'b0, product[2*WIDTH : 1]};
+            end
+        end
+    end
 
     always @(posedge clk) begin
         if(rst) begin
@@ -56,35 +64,18 @@ module MUL2 #(
             end
         end
         else if(current_state == INIT) begin
-            set = 1;
-            shift = 0;
-            we = 1;
-			shift_times = WIDTH;
+            shift_times = WIDTH;
             next_state = CALC;
         end
         else if(current_state == DONE) begin
-            we = 0;
-            shift = 0;
-            set = 0;
             res = product;
             next_state = IDLE;
         end
         else begin // CALC
-            if(product[0]) begin
-//                next_product = product + multiplicand;
-                we = 1;
-            end
-            else begin
-                we = 0;
-            end
-            
-            shift = 1;
-            set = 0;
-			shift_times = shift_times - 1;
-            
             if(shift_times == 0) begin
                 next_state = DONE;
             end
+            shift_times = shift_times - 1;
         end
     end
 
