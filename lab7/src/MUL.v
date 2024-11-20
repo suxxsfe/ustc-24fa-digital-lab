@@ -36,7 +36,7 @@ module MUL #(
         .din(b), .dout(multiplier)
     );
     
-    Adder8 adder(
+    Adder8 #(.WIDTH(2*WIDTH)) adder(
         .a(product), .b(multiplicand),
         .ci(0),
         .s(next_product)
