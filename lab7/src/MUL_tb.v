@@ -3,8 +3,8 @@ module MUL_tb #(
 ) ();
 reg  [WIDTH-1:0]    a, b;
 reg                 rst, clk, start;
-wire [2*WIDTH-1:0]  res;
-wire                finish;
+wire [2*WIDTH-1:0]  res1, res2;
+wire                finish1, finish2;
 integer             seed;
 
 initial begin
@@ -31,19 +31,29 @@ initial begin
     $finish;
 end
 
-MUL mul(
+MUL #(.WIDTH(WIDTH)) mul1(
     .clk        (clk),
     .rst        (rst),
     .start      (start),
     .a          (a),
     .b          (b),
-    .res        (res),
-    .finish     (finish)
+    .res        (res1),
+    .finish     (finish1)
+);
+
+MUL2 #(.WIDTH(WIDTH)) mul2(
+    .clk        (clk),
+    .rst        (rst),
+    .start      (start),
+    .a          (a),
+    .b          (b),
+    .res        (res2),
+    .finish     (finish2)
 );
 
 reg [2*WIDTH-1 : 0] correct;
 always @(*) begin
-    correct = {32'b0, a} * b;
+    correct = {{WIDTH{1'b0}}, a} * b;
 end
 
 endmodule
