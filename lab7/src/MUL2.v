@@ -18,7 +18,7 @@ module MUL2 #(
     localparam DONE = 2'b11;            // 计算完成。下个周期跳转到 IDLE
     reg [1:0] current_state, next_state;
 
-    integer shift_times;
+    reg [$clog2(WIDTH) : 0] shift_times;
     wire [WIDTH : 0] next_product;
     
     Adder8 #(.WIDTH(WIDTH)) adder(
