@@ -19,7 +19,7 @@ MUL2 #(.WIDTH(WIDTH)) mul2(
 
 Segment segment(
 	.clk(clk), .rst(rst),
-	.output_data({24'b1, res[7 : 0]}),
+	.output_data({24'b0, res[7 : 0]}),
 	.seg_data(out), .seg_an(select)
 );
 
