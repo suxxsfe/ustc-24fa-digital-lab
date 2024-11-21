@@ -36,8 +36,10 @@ module MUL2 #(
         if(current_state == INIT) begin
             product <= {{(WIDTH+1){1'b0}}, b};
             multiplicand <= a;
+			shift_times <= 0;
         end
         else if(current_state == CALC) begin
+			shift_times <= shift_times+1;
             if(product[0]) begin
                 product <= {1'b0, next_product, product[WIDTH-1 : 1]};
             end
@@ -64,7 +66,6 @@ module MUL2 #(
             end
         end
         else if(current_state == INIT) begin
-            shift_times = WIDTH;
             next_state = CALC;
         end
         else if(current_state == DONE) begin
@@ -72,10 +73,9 @@ module MUL2 #(
             next_state = IDLE;
         end
         else begin // CALC
-            if(shift_times == 0) begin
+            if(shift_times == WIDTH-1) begin
                 next_state = DONE;
             end
-            shift_times = shift_times - 1;
         end
     end
 
