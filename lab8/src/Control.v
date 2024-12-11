@@ -11,7 +11,7 @@ module Control (
 
     output                  [ 1 : 0]            led_sel,
     output                  [ 1 : 0]            seg_sel,
-    output      reg                             game_running
+    output      reg                             game_running, game_start
 );
 
 
@@ -21,6 +21,7 @@ always @(posedge clk) begin
     timer_en <= 0;
     timer_set <= 0;
     check_start <= 0;
+    game_start <= 0;
     
     if(rst) begin
         win <= 1;
@@ -33,6 +34,7 @@ always @(posedge clk) begin
             lost <= 0;
             timer_set <= 1;
             check_start <= 1;
+            game_start <= 1;
         end
     end else begin // game running
         game_running <= 1;
