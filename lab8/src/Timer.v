@@ -30,7 +30,7 @@ always @(posedge clk) begin
         minute <= 8'd1;
         second<= 0;
         micro_second<= 0;
-    end else if(en) begin
+    end else if(en && go) begin
         if(!second && !micro_second) begin
             if(minute) begin
                 minute <= minute - 1;

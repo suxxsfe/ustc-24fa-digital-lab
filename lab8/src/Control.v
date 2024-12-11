@@ -10,7 +10,8 @@ module Control (
     input                   [ 0 : 0]            timer_finish,
 
     output                  [ 1 : 0]            led_sel,
-    output                  [ 1 : 0]            seg_sel
+    output                  [ 1 : 0]            seg_sel,
+    output      reg                             game_running
 );
 
 
@@ -24,13 +25,17 @@ always @(posedge clk) begin
     if(rst) begin
         win <= 1;
         lost <= 1;
+        game_running <= 0;
     end else if(win || lost) begin // game over
+        game_running <= 0;
         if(btn) begin
             win <= 0;
             lost <= 0;
             timer_set <= 1;
+            check_start <= 1;
         end
     end else begin // game running
+        game_running <= 1;
         if(timer_finish) begin
             lost <= 1;
         end else if(check_result == 6'b100_000) begin
