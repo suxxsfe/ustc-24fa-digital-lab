@@ -8,6 +8,7 @@ module Control (
     output      reg         [ 0 : 0]            timer_en,
     output      reg         [ 0 : 0]            timer_set,
     input                   [ 0 : 0]            timer_finish,
+    input                                       force_new_game,
 
     output                  [ 1 : 0]            led_sel,
     output                  [ 1 : 0]            seg_sel,
@@ -27,6 +28,12 @@ always @(posedge clk) begin
         win <= 1;
         lost <= 1;
         game_running <= 0;
+    end else if(force_new_game) begin
+        win <= 0;
+        lost <= 0;
+        timer_set <= 1;
+        check_start <= 1;
+        game_start <= 1;
     end else if(win || lost) begin // game over
         game_running <= 0;
         if(btn) begin

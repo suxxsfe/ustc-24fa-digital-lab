@@ -30,13 +30,15 @@ always @(posedge clk) begin
         minute <= 8'd1;
         second<= 0;
         micro_second<= 0;
+    end else if(!second && !micro_second && !minute) begin
+        second <= -1;
+        micro_second <= -1;
+        minute <= -1;
     end else if(en && go) begin
         if(!second && !micro_second) begin
-            if(minute) begin
-                minute <= minute - 1;
-                second <= SECOND_MAX;
-                micro_second <= MSECOND_MAX;
-            end
+            minute <= minute - 1;
+            second <= SECOND_MAX;
+            micro_second <= MSECOND_MAX;
         end else if(!micro_second) begin
             second <= second - 1;
             micro_second <= MSECOND_MAX;
